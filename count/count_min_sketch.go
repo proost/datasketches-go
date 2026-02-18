@@ -145,7 +145,7 @@ func (c *CountMinSketch) GetEstimate(item []byte) int64 {
 	hashLocations := c.getHashes(item)
 	estimate := int64(math.MaxInt64)
 	for _, h := range hashLocations {
-		estimate = Min(estimate, c.sketchSlice[h])
+		estimate = min(estimate, c.sketchSlice[h])
 	}
 	return estimate
 }
