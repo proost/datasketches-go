@@ -23,6 +23,8 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/apache/datasketches-go/internal"
 )
 
@@ -84,7 +86,8 @@ func TestWriteReadUnary(t *testing.T) {
 		if nextWordIndex != int(ptrArr[NextWordIdx]) {
 			t.Errorf("Before readUnary: nextWordIndex %d != ptrArr[NextWordIdx] %d", nextWordIndex, ptrArr[NextWordIdx])
 		}
-		result := readUnary(compressedWords, ptrArr)
+		result, err := readUnary(compressedWords, ptrArr)
+		assert.NoError(t, err)
 		t.Logf("Result: %d, expected: %d", result, i)
 		if result != int64(i) {
 			t.Errorf("Mismatch: got %d, expected %d", result, i)
@@ -170,9 +173,10 @@ func TestWriteReadPairs(t *testing.T) {
 	compressedWords := make([]int, MaxWords)
 	// Loop over base bits 0 to 11.
 	for bb := 0; bb <= 11; bb++ {
-		numWordsWritten := lowLevelCompressPairs(pairArray, numPairs, bb, compressedWords)
+		numWordsWritten, err := lowLevelCompressPairs(pairArray, numPairs, bb, compressedWords)
+		assert.NoError(t, err)
 		t.Logf("numWordsWritten = %d, bb = %d", numWordsWritten, bb)
-		err := lowLevelUncompressPairs(pairArray2, numPairs, bb, compressedWords, numWordsWritten)
+		err = lowLevelUncompressPairs(pairArray2, numPairs, bb, compressedWords, numWordsWritten)
 		if err != nil {
 			t.Errorf("Error in lowLevelUncompressPairs for bb=%d: %v", bb, err)
 		}
@@ -390,9 +394,10 @@ func TestWriteReadPairsExtended(t *testing.T) {
 	compressedWords := make([]int, MaxWords)
 	// Loop over base bits 0 to 11.
 	for bb := 0; bb <= 11; bb++ {
-		numWordsWritten := lowLevelCompressPairs(pairArray, numPairs, bb, compressedWords)
+		numWordsWritten, err := lowLevelCompressPairs(pairArray, numPairs, bb, compressedWords)
+		assert.NoError(t, err)
 		t.Logf("Base bits: %d, words written: %d", bb, numWordsWritten)
-		err := lowLevelUncompressPairs(pairArray2, numPairs, bb, compressedWords, numWordsWritten)
+		err = lowLevelUncompressPairs(pairArray2, numPairs, bb, compressedWords, numWordsWritten)
 		if err != nil {
 			t.Errorf("Error in lowLevelUncompressPairs for base bits %d: %v", bb, err)
 		}
