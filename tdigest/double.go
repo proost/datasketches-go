@@ -155,18 +155,14 @@ func newDoubleFromInternalStates(
 
 	// Ensure centroids has enough capacity
 	if cap(centroids) < capacity {
-		newCentroids := make([]doublePrecisionCentroid, len(centroids), capacity)
-		copy(newCentroids, centroids)
-		centroids = newCentroids
+		centroids = slices.Grow(centroids, capacity)
 	}
 
 	// Ensure the buffer has enough capacity
 	if buffer == nil {
 		buffer = make([]float64, 0, capacity*bufferMultiplier)
 	} else if cap(buffer) < capacity*bufferMultiplier {
-		newBuffer := make([]float64, len(buffer), capacity*bufferMultiplier)
-		copy(newBuffer, buffer)
-		buffer = newBuffer
+		buffer = slices.Grow(buffer, capacity*bufferMultiplier)
 	}
 
 	return &Double{
