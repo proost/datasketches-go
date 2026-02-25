@@ -63,8 +63,8 @@ type int32ValueSummary struct {
 	value int32
 }
 
-func (s int32ValueSummary) Reset()          {}
-func (s int32ValueSummary) Clone() Summary  { return s }
+func (s int32ValueSummary) Reset()             {}
+func (s int32ValueSummary) Clone() Summary     { return s }
 func (s int32ValueSummary) Update(value int32) {}
 
 func newInt32ValueSummary() int32ValueSummary {
